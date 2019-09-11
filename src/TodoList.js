@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import TodoListUI from './TodoListUI'
 
 class TodoList extends Component {
   constructor (props) {
@@ -24,37 +25,59 @@ class TodoList extends Component {
         />  
         <button onClick={this.handleButtonClick}>Submit</button>
         <ul>
-          {this.state.list.map(
-            (value, index) => {
-              return (
-                <li key={index} onClick={this.handleDelete.bind(this,index)}>{value}</li>
-              )
-            }
-          )}
+          {this.todolist()}
         </ul>
+        
       </Fragment>
     )
   }
 
+  todolist () {
+    return (
+      this.state.list.map(
+        (value, index) => {
+          return (
+            <li key={index}>
+              <TodoListUI index={index} value={value} handleDelete={this.handleDelete.bind(this) }/>
+            </li>
+          )
+        }
+      )
+    )
+  }
+
   handleInputChange (e) {
-    this.setState({
-      inputValue: e.target.value
-    })
+    const value = e.target.value
+    this.setState(
+      () => {
+        return {
+          inputValue: value
+        }
+      }
+    )
   }
 
   handleButtonClick () {
-    this.setState({
-      list: [...this.state.list, this.state.inputValue],
-      inputValue: ''
-    })
+    this.setState(
+      (prevState) => {
+        return {
+          list: [...prevState.list, prevState.inputValue],
+          inputValue: ''
+        }
+      }
+    )
   }
 
   handleDelete (index) {
-    const list = [...this.state.list];
-    list.splice(index,1);
-    this.setState({
-      list
-    })
+    this.setState(
+      (prevState) => {
+        const list = [...prevState.list];
+        list.splice(index,1);
+        return {
+          list
+        }
+      }
+    )
   }
 }
 
